@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT json_build_object('user', u.*, 'profile', p.*) FROM users u JOIN profiles p ON u.profile_uuid = p.uuid WHERE p.email = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "json_build_object",
+        "type_info": "Json"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "6aa26c5555d799f9b496cad2b8a7b5db18af4e7dbef8fa94e48d5e989b09b04f"
+}
