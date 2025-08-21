@@ -19,3 +19,29 @@ CREATE TRIGGER trg_aiud_bookings_event_log
 AFTER INSERT OR UPDATE OR DELETE ON bookings
 FOR EACH ROW
 EXECUTE FUNCTION log_event_diff_trigger();
+
+CREATE OR REPLACE FUNCTION enforce_unique_booking()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Kontrollera om kombinationen redan finns
+    IF EXISTS (
+        SELECT 1
+        FROM bookings
+        WHERE bookable_uuid = NEW.bookable_uuid
+          AND profile_uuid = NEW.profile_uuid
+          AND uuid <> NEW.uuid
+    ) THEN
+        RAISE EXCEPTION 
+            'You have already requested a booking on this slot'
+            USING ERRCODE = 'unique_violation'; -- samma error code som constraint
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Koppla triggern
+CREATE TRIGGER bookings_unique_check
+BEFORE INSERT OR UPDATE ON bookings
+FOR EACH ROW
+EXECUTE FUNCTION enforce_unique_booking();
