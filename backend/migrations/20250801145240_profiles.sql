@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS profiles (
     uuid UUID PRIMARY KEY NOT NULL DEFAULT gen_random_uuid(),
     first_name TEXT,
     last_name TEXT,
-    email TEXT,
+    email TEXT UNIQUE,
     phone TEXT,
 
     /*
