@@ -15,7 +15,7 @@ import React from 'react'
 
 const SignUp = () => {
      return ( 
-    <div className="w-dvw h-dvh flex justify-center items-center">
+    <div className="w-full h-dvh flex justify-center items-center">
      <Card className="w-full max-w-sm">
       <CardHeader>
         <CardTitle>Create a account</CardTitle>

@@ -15,8 +15,8 @@ import React from 'react'
 
 const signIn = () => {
      return ( 
-    <div className="w-dvw h-dvh flex justify-center items-center">
-     <Card className="w-full max-w-sm">
+    <div className="h-dvh flex justify-center items-center">
+     <Card className="max-w-sm">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>
