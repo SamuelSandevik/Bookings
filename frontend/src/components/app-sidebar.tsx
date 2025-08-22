@@ -30,7 +30,7 @@ const items = [
   },
   {
     title: "Create bookable",
-    url: "#",
+    url: "/create-bookable",
     icon: PackagePlus,
   },
   {
