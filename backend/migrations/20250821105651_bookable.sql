@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS bookables (
+    belongs_to_user UUID NOT NULL REFERENCES users(uuid) ON DELETE CASCADE,
     uuid UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
     title TEXT NOT NULL,
-    price DECIMAL(9, 2) NOT NULL,
+    price DOUBLE PRECISION NOT NULL,
     "desc" TEXT,
-    type TEXT,
-    
+    color TEXT, 
 
     created_at BIGINT NOT NULL DEFAULT ((extract(epoch FROM NOW()) * 1000)::BIGINT),
     updated_at BIGINT NOT NULL DEFAULT ((extract(epoch FROM NOW()) * 1000)::BIGINT)

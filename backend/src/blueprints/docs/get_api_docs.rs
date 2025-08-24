@@ -138,6 +138,60 @@ pub async fn get_api_docs() -> impl Responder {
                     error_example: None,
                 }
             ]
+        },
+        BlueprintInfo {
+            name: "Bookables".to_string(),
+            routes: vec![
+                RouteInfo {
+                    method: "GET".to_string(),
+                    path: "/bookables".to_string(),
+                    description: "Gets all bookables a user has created".to_string(),
+                    query_params: vec![],
+                    path_params: vec![],
+                    body_params: None,
+                    middleware: vec![],
+                    required_permissions: None,
+                    response_example: None,
+                    error_example: None,
+                },
+                RouteInfo {
+                    method: "POST".to_string(),
+                    path: "/bookables".to_string(),
+                    description: "Creates a new bookable".to_string(),
+                    query_params: vec![],
+                    path_params: vec![],
+                    body_params: None,
+                    middleware: vec![],
+                    required_permissions: None,
+                    response_example: None,
+                    error_example: None,
+                },
+                RouteInfo {
+                    method: "PUT".to_string(),
+                    path: "/bookables/{bookable_uuid}".to_string(),
+                    description: "Updates a bookable".to_string(),
+                    query_params: vec![],
+                    path_params: vec![],
+                    body_params: None,
+                    middleware: vec![],
+                    required_permissions: None,
+                    response_example: None,
+                    error_example: None,
+                },
+                RouteInfo {
+                    method: "DELETE".to_string(),
+                    path: "/bookables/{bookable_uuid}".to_string(),
+                    description: "Deletes a bookable".to_string(),
+                    query_params: vec![],
+                    path_params: vec![],
+                    body_params: None,
+                    middleware: vec![],
+                    required_permissions: None,
+                    response_example: None,
+                    error_example: None,
+                },
+                
+            ]
         }
         
     ];
