@@ -24,20 +24,28 @@ const BookableCard = (bookable: IBookable) => {
 
       <CardFooter className="p-2 flex items-center w-full justify-between text-xs">
         <span className="">{bookable.price}kr</span>
+        <div>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="text-blue-500 hover:text-blue-600 hover:bg-blue-50"
+          onClick={() => {
+              // edit bookable
+            }}
+            >
+          Edit
+        </Button>
         <Button
           size="sm"
           variant="ghost"
           className="text-red-500 hover:text-red-600 hover:bg-red-50"
           onClick={() => {
-            // Clear the bookable (reset to initial state)
-            dispatch({ type: 0, payload: "" }); // SET_TITLE to ""
-            dispatch({ type: 1, payload: "1" }); // SET_PRICE to 1
-            dispatch({ type: 2, payload: "" }); // SET_DESCRIPTION to ""
-            dispatch({ type: 3, payload: "" }); // SET_COLOR to ""
-          }}
-        >
+              // remove bookable
+            }}
+            >
           Remove
         </Button>
+            </div>
       </CardFooter>
     </Card>
   );

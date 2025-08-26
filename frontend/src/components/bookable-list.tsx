@@ -2,7 +2,7 @@ import React from 'react'
 
 const BookableList = () => {
   return (
-    <div></div>
+    Bookables.map()
   )
 }
 

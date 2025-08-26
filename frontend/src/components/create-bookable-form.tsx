@@ -68,8 +68,9 @@ export function CreateBookableForm() {
 
   function onSubmit(values: FormValues) {
     console.log("Submitted values:", values)
+    // create bookable
     setList([...list, values]);
-    console.log(list)
+    console.log(list) 
 
   }
 

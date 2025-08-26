@@ -4,6 +4,7 @@ import ".././globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { BookableProvider } from "@/context/BookableContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`} 
       >
+      <AuthProvider>
       <BookableProvider>
         <div className="flex h-dvh w-dvw">
         <SidebarProvider>
@@ -41,6 +43,7 @@ export default function RootLayout({
           </SidebarProvider>
         </div>
       </BookableProvider>
+      </AuthProvider>
       </body>
     </html>
   );

@@ -3,7 +3,7 @@ import { CreateBookableForm } from "@/components/create-bookable-form";
 
 export default function BookablesPage() {
   return (
-    <div className="flex justify-evenly items-stretch">
+    <div className="flex justify-evenly sm:flex-row flex-col items-stretch">
       <div className="bg-white p-6">
         <h1 className="text-2xl font-bold mb-4">List of created bookables</h1>
         <BookableCard></BookableCard>
