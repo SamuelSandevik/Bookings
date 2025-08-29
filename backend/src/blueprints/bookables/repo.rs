@@ -3,7 +3,7 @@ use serde::Deserialize;
 use serde_json::Value;
 use uuid::Uuid;
 
-use crate::{blueprints::{bookables, users::{model::User, repo::UserProfile}}, get_db_pool, utils::api_response::{ApiError, ErrorKind}};
+use crate::{blueprints::users::repo::UserProfile, get_db_pool, utils::api_response::{ApiError, ErrorKind}};
 
 /* pub async fn get_bookings(user_uuid: &Uuid) {
     let res: <Value, sqlx::Error> = sqlx::query_as!(Value, "SELECT * FROM ")
