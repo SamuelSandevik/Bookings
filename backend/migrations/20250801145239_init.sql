@@ -64,7 +64,8 @@ BEGIN
             END IF;
         END LOOP;
 
-        IF jsonb_object_length(diff_data) > 0 THEN
+        -- Kolla om diff_data innehåller några nycklar
+        IF (SELECT count(*) FROM jsonb_each(diff_data)) > 0 THEN
             v_row_uuid := COALESCE(NEW.uuid, OLD.uuid);
             INSERT INTO event_logs (table_name, row_uuid, event, diff)
             VALUES (TG_TABLE_NAME, v_row_uuid, 'UPDATE', diff_data);
