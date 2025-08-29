@@ -1,2 +1,2 @@
-mod routes;
+pub mod routes;
 mod repo;

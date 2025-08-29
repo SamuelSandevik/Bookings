@@ -21,7 +21,7 @@ pub struct NewBookableSlotDTO {
 }
 
 pub async fn create_bookable_slot(
-    up: &UserProfile,
+    _up: &UserProfile,
     new_bookable_slot: &NewBookableSlotDTO,
 ) -> Result<Value, ApiError> {
     let res: Result<Option<Value>, sqlx::Error> = sqlx::query_scalar!(
@@ -50,14 +50,14 @@ pub async fn create_bookable_slot(
     }
 }
 
-pub async fn get_bookable_slots(up: &UserProfile, bookable_slot_uuid: &Uuid) -> Result<Value, ApiError> {
+pub async fn get_bookable_slots(up: &UserProfile, bookable_uuid: &Uuid) -> Result<Value, ApiError> {
     let res = sqlx::query_scalar!(r#"
             SELECT COALESCE(json_agg(row_to_json(s.*)), '[]'::json) 
             FROM bookable_slots s 
             JOIN bookables b ON s.bookable_uuid = b.uuid
-            WHERE s.uuid = $1 AND b.belongs_to_user = $2 
+            WHERE s.bookable_uuid = $1 AND b.belongs_to_user = $2 
         "#,
-        bookable_slot_uuid,
+        bookable_uuid,
         up.user.uuid
     )
     .fetch_optional(get_db_pool())
@@ -78,14 +78,16 @@ pub async fn get_bookable_slots(up: &UserProfile, bookable_slot_uuid: &Uuid) -> 
     }
 }
 
-pub async fn get_bookable(up:  &UserProfile, uuid: &Uuid) -> Result<Value, ApiError> {
+pub async fn get_bookable_slot(up:  &UserProfile, bookable_slot_uuid: &Uuid , bookable_uuid: &Uuid) -> Result<Value, ApiError> {
     let res = sqlx::query_scalar!(r#"
-            SELECT row_to_json(bookables)
-            FROM bookables 
-            WHERE belongs_to_user = $1 AND uuid = $2
+            SELECT COALESCE(json_agg(row_to_json(s.*)), '[]'::json) 
+            FROM bookable_slots s 
+            JOIN bookables b ON s.bookable_uuid = b.uuid
+            WHERE s.bookable_uuid = $1 AND b.belongs_to_user = $2 AND s.uuid = $3
         "#,
+        bookable_uuid,
         up.user.uuid,
-        uuid
+        bookable_slot_uuid
     )
     .fetch_optional(get_db_pool())
     .await;
@@ -105,23 +107,26 @@ pub async fn get_bookable(up:  &UserProfile, uuid: &Uuid) -> Result<Value, ApiEr
     }
 }
 
-pub async fn update_bookable(up: &UserProfile, bookable_slot_uuid: &Uuid, new_bookable_slot: &NewBookableSlotDTO) -> Result<Value, ApiError> {
-    let res = sqlx::query_scalar!(
-        // query must be a string literal
-        r#"UPDATE bookable_slots SET 
-            date = $3,
-            time_from = $4,
-            time_to = $5,
-            min_capacity = $6,
-            max_capacity = $7
-           WHERE bookable_uuid = $1 AND uuid = $2 RETURNING row_to_json(bookable_slots) "#,
+pub async fn update_bookable_slot(up: &UserProfile, bookable_slot_uuid: &Uuid, new_bookable_slot: &NewBookableSlotDTO) -> Result<Value, ApiError> {
+    let res = sqlx::query_scalar!(r#"
+        UPDATE bookable_slots s
+        SET 
+           date = $3,
+           time_from = $4,
+           time_to = $5,
+           min_capacity = $6,
+           max_capacity = $7
+        FROM bookables b
+        WHERE s.bookable_uuid = $1 AND s.uuid = $2 AND b.belongs_to_user = $8 RETURNING row_to_json(s.*)
+        "#,
         new_bookable_slot.bookable_uuid,
         bookable_slot_uuid,
         new_bookable_slot.date,
         new_bookable_slot.time_from,
         new_bookable_slot.time_to,
         new_bookable_slot.min_capacity,
-        new_bookable_slot.max_capacity
+        new_bookable_slot.max_capacity,
+        up.user.uuid
     )
     .fetch_optional(get_db_pool())
     .await;
@@ -141,8 +146,14 @@ pub async fn update_bookable(up: &UserProfile, bookable_slot_uuid: &Uuid, new_bo
     }
 }
 
-pub async fn delete_bookable(up: &UserProfile, bookable_uuid: &Uuid) -> Result<(), ApiError> {
-    let res = sqlx::query!("DELETE FROM bookables WHERE belongs_to_user = $1 AND uuid = $2", up.user.uuid, bookable_uuid)
+pub async fn delete_bookable_slot(up: &UserProfile, bookable_slot_uuid: &Uuid) -> Result<(), ApiError> {
+    let res = sqlx::query!(r#"
+        DELETE FROM bookable_slots s
+        USING bookables b
+        WHERE b.uuid = s.bookable_uuid
+          AND b.belongs_to_user = $1
+          AND s.uuid = $2
+    "#, up.user.uuid, bookable_slot_uuid)
     .execute(get_db_pool()).await;
     if let Err(e) = res {
         return Err(ApiError { status_code: StatusCode::BAD_REQUEST, error: ErrorKind::DatabaseError, message: e.to_string() })
