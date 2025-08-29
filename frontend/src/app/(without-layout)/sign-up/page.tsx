@@ -29,12 +29,10 @@ const SignUp = () => {
   const router = useRouter();
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form submitted:", data)
     try {
       const user = new Users()
       const response = await user.signUp(data)
       if (response) {
-        console.log("Sign up success:", response)
         router.push('/sign-in')
       } else {
         console.error("Sign up failed")

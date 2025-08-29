@@ -10,6 +10,7 @@ interface IBookableContext {
 }
 
 const initialState = {
+  uuid: "",
   title: "",
   price: 1,
   description: "",

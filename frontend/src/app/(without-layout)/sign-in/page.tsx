@@ -30,14 +30,12 @@ const SignIn = () => {
 
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form submitted:", data)
     try {
       const user = new Users()
       const response = await user.signIn(data.email, data.password)
       if (response) {
-        console.log("Login success:", response.data.token)
-        if (response?.data.token) setAuthToken(response.data.token);
-         router.push('/bookings')
+        setAuthToken(response.data.token)
+        router.push('/bookables')
       } else {
         console.error("Login failed")
       }

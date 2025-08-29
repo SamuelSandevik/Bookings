@@ -9,7 +9,7 @@ if (!BACKEND_URL) {
 
 export default class Users {
 
-    
+
     
     async signUp(user: IUser) {
         try {
@@ -50,10 +50,17 @@ export default class Users {
         }
     }
 
-    async getUserData() {
+    async getUserData(token: string) {
+
+        const config = {
+          headers: {
+            Authorization: token,
+          },
+        };
+
         try {
-            const {data} = await axios.get(BACKEND_URL + "users/me") 
-            return data;
+            const {data} = await axios.get(BACKEND_URL + "users/me", config) 
+            return data.data;
         } catch (error) {
             console.error(error);    
         }

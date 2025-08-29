@@ -10,6 +10,7 @@ export enum ActionType {
   SET_PRICE,
   SET_DESCRIPTION,
   SET_COLOR,
+  SET_UUID, // <-- Add this
 }
 
 export const BookableReducer = (
@@ -19,16 +20,14 @@ export const BookableReducer = (
   switch (action.type) {
     case ActionType.SET_TITLE:
       return { ...bookable, title: action.payload };
-
     case ActionType.SET_PRICE:
-      return { ...bookable, price: +action.payload };
-
+      return { ...bookable, price: Number(action.payload) };
     case ActionType.SET_DESCRIPTION:
       return { ...bookable, description: action.payload };
-
     case ActionType.SET_COLOR:
       return { ...bookable, color: action.payload };
-
+    case ActionType.SET_UUID:
+      return { ...bookable, uuid: action.payload };
     default:
       return bookable;
   }

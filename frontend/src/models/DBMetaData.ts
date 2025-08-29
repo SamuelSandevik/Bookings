@@ -1,5 +1,5 @@
 export interface DBMetaData {
-    Uuid?: string;
+    uuid?: string;
     created_at?: number;
     updated_at?: number;
 }

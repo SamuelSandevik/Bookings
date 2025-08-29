@@ -8,6 +8,7 @@ pub async fn route(req: HttpRequest, body: web::Json<NewBookableDTO>) -> impl Re
     
     let user_profile = req.extensions().get::<UserProfile>().cloned().unwrap();
 
+    println!("user: {:?}", user_profile.user.uuid);
 
     match repo::create_bookable(&user_profile, &body.0).await {
         Ok(up) => ApiResponse::Success { status_code: StatusCode::OK, data: up },

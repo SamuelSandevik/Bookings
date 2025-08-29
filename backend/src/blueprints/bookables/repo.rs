@@ -18,6 +18,8 @@ pub struct NewBookableDTO {
     pub color: Option<String>,
 }
 
+// c82609e4-b0a1-4a16-9172-ce5d9b085fe2
+
 pub async fn create_bookable(
     up: &UserProfile,
     new_bookable: &NewBookableDTO,

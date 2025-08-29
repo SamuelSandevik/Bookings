@@ -7,22 +7,34 @@ if (!BACKEND_URL) {
     throw new Error("NEXT_PUBLIC_BACKEND_URL is not defined in environment variables.");
 }
 
-export default class Users {
-    async getBookables(): Promise<IBookable[] | null> {
+export default class Bookables {
+    async getBookables(token: string): Promise<IBookable[] | null> {
+       
+        const config = {
+          headers: {
+            Authorization: token,
+          },
+        };
+
         try {
-            const {data} = await axios.get(BACKEND_URL + "bookables")
-            return data;
+            const {data} = await axios.get(BACKEND_URL + "bookables", config) 
+            return data.data;
         } catch (error) {
-            console.error(error)
-            return null
-        }    
+            console.error(error); 
+            return null;   
+        }
     }
-    async createBookable(bookable: IBookable) {
+    
+    async createBookable(bookable: IBookable, token: string) {
         try {
             const {data} = await axios.post(BACKEND_URL + "bookables", {
-                    bookable
+                    title: bookable.title,
+                    price: bookable.price,
+                    description: bookable.description,
+                    color: bookable.color,
                 }, {
                     headers: {
+                       Authorization: token,
                       'Content-Type': 'application/json'
                     }
                 }) 
@@ -32,13 +44,16 @@ export default class Users {
         }
     }
     
-    async updateBookable(bookable: IBookable) {
+    async updateBookable(uuid: string, bookable: IBookable, token: string) {
         try {
-            const Uuid = bookable.Uuid
-            const {data} = await axios.post(BACKEND_URL + "bookables/" + Uuid, {
-                    bookable
+            const {data} = await axios.put(BACKEND_URL + "bookables/" + uuid, {
+                    title: bookable.title,
+                    price: bookable.price,
+                    description: bookable.description,
+                    color: bookable.color,
                 }, {
                     headers: {
+                       Authorization: token,
                       'Content-Type': 'application/json'
                     }
                 }) 
@@ -48,10 +63,17 @@ export default class Users {
         }
     }      
 
-    async deleteBookable(bookable: IBookable) {
+    async deleteBookable(bookable: IBookable, token: string) {
+        
+        const config = {
+          headers: {
+            Authorization: token,
+          },
+        };
+
         try {
-            const Uuid = bookable.Uuid
-            const {data} = await axios.delete(BACKEND_URL + "bookables/" + Uuid)
+            const uuid = bookable.uuid
+            const {data} = await axios.delete(BACKEND_URL + "bookables/" + uuid, config)
             return data;
         } catch (error) {
             console.error(error);    
