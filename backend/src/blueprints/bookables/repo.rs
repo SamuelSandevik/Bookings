@@ -74,7 +74,30 @@ pub async fn get_bookables(up: &UserProfile) -> Result<Value, ApiError> {
 }
 
 pub async fn get_bookable(up:  &UserProfile, uuid: &Uuid) -> Result<Value, ApiError> {
-    todo!();
+    let res = sqlx::query_scalar!(r#"
+            SELECT row_to_json(bookables)
+            FROM bookables 
+            WHERE belongs_to_user = $1 AND uuid = $2
+        "#,
+        up.user.uuid,
+        uuid
+    )
+    .fetch_optional(get_db_pool())
+    .await;
+
+    match res {
+        Ok(Some(val)) => Ok(val.unwrap()),
+        Ok(None) => Err(ApiError {
+            status_code: StatusCode::NOT_FOUND,
+            error: ErrorKind::NotFound,
+            message: "No bookables found".into(),
+        }),
+        Err(e) => Err(ApiError {
+            status_code: StatusCode::BAD_REQUEST,
+            error: ErrorKind::DatabaseError,
+            message: e.to_string(),
+        }),
+    }
 }
 
 pub async fn update_bookable(up: &UserProfile, bookable_uuid: &Uuid, new_bookable: &NewBookableDTO) -> Result<Value, ApiError> {

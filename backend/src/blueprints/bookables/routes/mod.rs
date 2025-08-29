@@ -2,6 +2,7 @@ use actix_web::web;
 
 pub mod create_bookable;
 pub mod get_bookables;
+pub mod get_bookable;
 pub mod update_bookable;
 pub mod delete_bookable;
 
