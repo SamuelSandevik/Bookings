@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS event_logs (
     table_name TEXT NOT NULL,
     row_uuid UUID NOT NULL,
     event event_type NOT NULL,
-    diff JSON,
+    diff JSONB,
     timestamp BIGINT NOT NULL DEFAULT floor(extract(epoch FROM now()) * 1000)::BIGINT
 );
 
@@ -35,14 +35,14 @@ CREATE TABLE IF NOT EXISTS event_logs (
 CREATE OR REPLACE FUNCTION log_event_diff_trigger()
 RETURNS trigger AS $$
 DECLARE
-    diff_data JSON := '{}'::json;
+    diff_data JSONB := '{}'::jsonb;
     key TEXT;
     v_row_uuid UUID;
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        FOR key IN SELECT json_object_keys(to_json(NEW)) LOOP
+        FOR key IN SELECT jsonb_object_keys(to_jsonb(NEW)) LOOP
             IF key NOT IN ('created_at', 'updated_at', 'uuid') THEN
-                diff_data := diff_data || json_build_object(key, to_json(NEW)->key);
+                diff_data := diff_data || jsonb_build_object(key, to_jsonb(NEW)->key);
             END IF;
         END LOOP;
 
@@ -53,18 +53,18 @@ BEGIN
         VALUES (TG_TABLE_NAME, v_row_uuid, 'INSERT', diff_data);
 
     ELSIF TG_OP = 'UPDATE' THEN
-        FOR key IN SELECT json_object_keys(to_json(NEW)) LOOP
+        FOR key IN SELECT jsonb_object_keys(to_jsonb(NEW)) LOOP
             IF key NOT IN ('created_at', 'updated_at', 'uuid') THEN
-                IF to_json(NEW)->key IS DISTINCT FROM to_json(OLD)->key THEN
-                    diff_data := diff_data || json_build_object(
+                IF to_jsonb(NEW)->key IS DISTINCT FROM to_jsonb(OLD)->key THEN
+                    diff_data := diff_data || jsonb_build_object(
                         key,
-                        json_build_array(to_json(OLD)->key, to_json(NEW)->key)
+                        jsonb_build_array(to_jsonb(OLD)->key, to_jsonb(NEW)->key)
                     );
                 END IF;
             END IF;
         END LOOP;
 
-        IF json_object_length(diff_data) > 0 THEN
+        IF jsonb_object_length(diff_data) > 0 THEN
             v_row_uuid := COALESCE(NEW.uuid, OLD.uuid);
             INSERT INTO event_logs (table_name, row_uuid, event, diff)
             VALUES (TG_TABLE_NAME, v_row_uuid, 'UPDATE', diff_data);
@@ -79,7 +79,7 @@ BEGIN
         END;
 
         INSERT INTO event_logs (table_name, row_uuid, event, diff)
-        VALUES (TG_TABLE_NAME, v_row_uuid, 'DELETE', to_json(OLD));
+        VALUES (TG_TABLE_NAME, v_row_uuid, 'DELETE', to_jsonb(OLD));
     END IF;
 
     RETURN CASE TG_OP
