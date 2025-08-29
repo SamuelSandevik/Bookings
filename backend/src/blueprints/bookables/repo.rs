@@ -3,7 +3,7 @@ use serde::Deserialize;
 use serde_json::Value;
 use uuid::Uuid;
 
-use crate::{blueprints::{bookables, users::repo::UserProfile}, get_db_pool, utils::api_response::{ApiError, ErrorKind}};
+use crate::{blueprints::{bookables, users::{model::User, repo::UserProfile}}, get_db_pool, utils::api_response::{ApiError, ErrorKind}};
 
 /* pub async fn get_bookings(user_uuid: &Uuid) {
     let res: <Value, sqlx::Error> = sqlx::query_as!(Value, "SELECT * FROM ")
@@ -48,11 +48,11 @@ pub async fn create_bookable(
 }
 
 pub async fn get_bookables(up: &UserProfile) -> Result<Value, ApiError> {
-    let res = sqlx::query_scalar!(
-        // query must be a string literal
-        r#"SELECT row_to_json(bookables) 
-           FROM bookables 
-           WHERE belongs_to_user = $1"#,
+    let res = sqlx::query_scalar!(r#"
+            SELECT COALESCE(json_agg(row_to_json(bookables)), '[]'::json) 
+            FROM bookables 
+            WHERE belongs_to_user = $1
+        "#,
         up.user.uuid
     )
     .fetch_optional(get_db_pool())
@@ -73,6 +73,9 @@ pub async fn get_bookables(up: &UserProfile) -> Result<Value, ApiError> {
     }
 }
 
+pub async fn get_bookable(up:  &UserProfile, uuid: &Uuid) -> Result<Value, ApiError> {
+    todo!();
+}
 
 pub async fn update_bookable(up: &UserProfile, bookable_uuid: &Uuid, new_bookable: &NewBookableDTO) -> Result<Value, ApiError> {
     let res = sqlx::query_scalar!(
