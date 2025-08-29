@@ -11,6 +11,7 @@ pub fn bookable_config(cfg: &mut web::ServiceConfig) {
         web::scope("/bookables")
             .service(create_bookable::route)
             .service(get_bookables::route)
+            .service(get_bookable::route)
             .service(update_bookable::route)
             .service(delete_bookable::route)
     );
