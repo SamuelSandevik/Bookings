@@ -90,7 +90,7 @@ export default function BookablesPage() {
       <div className="bg-white">
         <div className="w-full overflow-x-hidden">
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 mx-auto justify-items-center max-w-6xl">
+            <div className="grid gap-4 mx-auto p-4 justify-items-center max-w-6xl grid-cols-[repeat(auto-fit,minmax(220px,1fr))]">
               {[...Array(5)].map((_, i) => (
                 <Skeleton
                   key={i}
