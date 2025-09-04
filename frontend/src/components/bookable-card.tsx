@@ -8,46 +8,70 @@ import { BookableContext } from "@/context/BookableContext";
 import { ActionType } from "@/reducers/BookableReducer";
 import Bookables from "@/services/Bookables";
 import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
-const BookableCard = (bookable: IBookable) => {
+interface BookableCardProps extends IBookable {
+  onEdit?: () => void;
+  onRemoved?: () => void; // <-- add this prop
+}
+
+const BookableCard = (props: BookableCardProps) => {
   const { dispatch } = useContext(BookableContext);
   const { token } = useAuth();
+  const router = useRouter();
 
-  const bookableService = new Bookables
+  const bookableService = new Bookables();
 
-  const handleEdit = () => {
-    dispatch({ type: ActionType.SET_TITLE, payload: bookable.title });
-    dispatch({ type: ActionType.SET_PRICE, payload: String(bookable.price) });
-    dispatch({ type: ActionType.SET_DESCRIPTION, payload: bookable.description });
-    dispatch({ type: ActionType.SET_COLOR, payload: bookable.color });
-    dispatch({ type: ActionType.SET_UUID, payload: bookable.uuid || "" });
-    console.log(bookable)
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    dispatch({ type: ActionType.SET_TITLE, payload: props.title });
+    dispatch({ type: ActionType.SET_PRICE, payload: String(props.price) });
+    dispatch({ type: ActionType.SET_DESCRIPTION, payload: props.desc });
+    dispatch({ type: ActionType.SET_COLOR, payload: props.color });
+    dispatch({ type: ActionType.SET_UUID, payload: props.uuid || "" });
+    if (props.onEdit) props.onEdit();
   };
 
-  console.log(bookable)
+  const handleRemove = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await bookableService.deleteBookable(props, token!);
+    if (props.onRemoved) props.onRemoved();
+  };
+
+  const handleString = (description: string) => {
+    if (description.length > 30) {
+      return description.slice(0, 40) + "...";
+    }
+    return description;
+  };
 
   return (
-    <Card className="flex flex-col justify-between items-center border gap-0 py-0 shadow-sm rounded-xl overflow-hidden">
+    <Card
+      onClick={() => {
+        router.push(`/bookables/${props.uuid}`);
+      }}
+  className="m-0 flex cursor-pointer flex-col justify-between h-32 w-full min-w-0 items-center border gap-0 py-0 shadow-sm rounded-xl overflow-hidden bg-white hover:bg-gray-100 transition"
+    >
       <div
         className="h-1 m-0  rounded-full w-3/4"
-        style={{ backgroundColor: bookable.color }}
+        style={{ backgroundColor: props.color }}
       />
       <CardHeader className="p-3 w-full">
         <CardTitle className="text-md font-semibold text-center">
-          - {bookable.title} -
+          - {props.title} -
         </CardTitle>
         <div className="text-xs w-full text-gray-500 text-left">
-          {bookable.description}
+          {handleString(props.desc)}
         </div>
       </CardHeader>
 
       <CardFooter className="p-2 flex items-center w-full justify-between text-xs">
-        <span className="">{bookable.price}kr</span>
+        <span className="">{props.price}kr</span>
         <div>
           <Button
             size="sm"
             variant="ghost"
-            className="text-blue-500 hover:text-blue-600 hover:bg-blue-50"
+            className="text-blue-500 hover:text-blue-700 hover:bg-blue-100 cursor-none"
             onClick={handleEdit}
           >
             Edit
@@ -55,10 +79,8 @@ const BookableCard = (bookable: IBookable) => {
           <Button
             size="sm"
             variant="ghost"
-            className="text-red-500 hover:text-red-600 hover:bg-red-50"
-            onClick={() => {
-              bookableService.deleteBookable(bookable, token!)
-            }}
+            className="text-red-500 hover:text-red-700 hover:bg-red-100 cursor-none"
+            onClick={handleRemove}
           >
             Remove
           </Button>

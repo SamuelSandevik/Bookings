@@ -25,12 +25,29 @@ export default class Bookables {
         }
     }
     
+    async getSingleBookable(uuid: string, token: string): Promise<IBookable | null> {
+        const config = {
+            headers: {
+                Authorization: token,
+                'Content-Type': 'application/json'
+            }
+        };
+
+        try {
+            const {data} = await axios.get(BACKEND_URL + "bookables/" + uuid, config);
+            return data.data;
+        } catch (error) {
+            console.error(error); 
+            return null;   
+        }
+    }
+    
     async createBookable(bookable: IBookable, token: string) {
         try {
             const {data} = await axios.post(BACKEND_URL + "bookables", {
                     title: bookable.title,
                     price: bookable.price,
-                    description: bookable.description,
+                    desc: bookable.desc,
                     color: bookable.color,
                 }, {
                     headers: {
@@ -49,7 +66,7 @@ export default class Bookables {
             const {data} = await axios.put(BACKEND_URL + "bookables/" + uuid, {
                     title: bookable.title,
                     price: bookable.price,
-                    description: bookable.description,
+                    desc: bookable.desc,
                     color: bookable.color,
                 }, {
                     headers: {

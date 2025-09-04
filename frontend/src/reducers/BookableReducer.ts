@@ -23,7 +23,7 @@ export const BookableReducer = (
     case ActionType.SET_PRICE:
       return { ...bookable, price: Number(action.payload) };
     case ActionType.SET_DESCRIPTION:
-      return { ...bookable, description: action.payload };
+      return { ...bookable, desc: action.payload };
     case ActionType.SET_COLOR:
       return { ...bookable, color: action.payload };
     case ActionType.SET_UUID:
