@@ -5,4 +5,5 @@ export interface IBookable extends DBMetaData{
     price: number;
     desc: string;
     color: string;
+    image: string;
 }

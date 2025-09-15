@@ -34,7 +34,7 @@ const items = [
   },
   {
     title: "Calendar",
-    url: "#",
+    url: "/calendar",
     icon: Calendar,
   },
   {
@@ -43,8 +43,8 @@ const items = [
     icon: PackagePlus,
   },
   {
-    title: "Place slots",
-    url: "#",
+    title: "Bookables",
+    url: "/bookables",
     icon: LandPlot,
   },
 ]

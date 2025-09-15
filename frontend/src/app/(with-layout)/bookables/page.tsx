@@ -84,30 +84,35 @@ export default function BookablesPage() {
       </Breadcrumb>
     <div className="">
       <h1 className="text-2xl font-bold my-4">Bookables</h1>
-      <div className="bg-gray-100 rounded p-4 flex flex-row gap-2">todo Filters
-        <Input className="w-1/5"></Input><select><option></option></select><Button></Button>
+      <div className="bg-gray-100 rounded p-4 flex flex-col sm:flex-row sm:gap-2 gap-4 flex-wrap">
+        {/* Responsive filter controls */}
+        <Input className="w-full sm:w-1/5" />
+        <select className="w-full sm:w-auto border rounded px-2 py-1">
+          <option></option>
+        </select>
+        <Button className="w-full sm:w-auto">Filter</Button>
       </div>
       <div className="bg-white">
         <div className="w-full overflow-x-hidden">
           {loading ? (
-            <div className="grid gap-4 mx-auto p-4 justify-items-center max-w-6xl grid-cols-[repeat(auto-fit,minmax(220px,1fr))]">
-              {[...Array(5)].map((_, i) => (
+            <div className="grid gap-4 mx-auto p-4 justify-items-center max-w-6xl grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {[...Array(4)].map((_, i) => (
                 <Skeleton
                   key={i}
-                  className="min-w-[220px] max-w-[320px] h-32 rounded-xl w-full"
+                  className="min-w-[220px] max-w-[320px] h-40 rounded-xl w-full"
                 />
               ))}
             </div>
           ) : (
-            <div className="grid gap-4 mx-auto p-4 justify-items-center max-w-6xl grid-cols-[repeat(auto-fit,minmax(220px,1fr))]">
-            {bookablesList.map((bookable) => (
-              <BookableCard
-                key={bookable.uuid}
-                {...bookable}
-                onEdit={handleEdit}
-                onRemoved={handleSaved}
-              />
-            ))}
+            <div className="grid gap-4 mx-auto p-4 justify-items-center max-w-6xl grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {bookablesList.map((bookable) => (
+                <BookableCard
+                  key={bookable.uuid}
+                  {...bookable}
+                  onEdit={handleEdit}
+                  onRemoved={handleSaved}
+                />
+              ))}
               <PlaceholderBookableCard onCreate={() => setShowForm(true)} />
             </div>
           )}

@@ -10,7 +10,7 @@ export enum ActionType {
   SET_PRICE,
   SET_DESCRIPTION,
   SET_COLOR,
-  SET_UUID, // <-- Add this
+  SET_UUID,
 }
 
 export const BookableReducer = (

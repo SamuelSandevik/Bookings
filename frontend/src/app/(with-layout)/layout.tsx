@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { BookableProvider } from "@/context/BookableContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { SlotProvider } from "@/context/SlotContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,23 +28,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
+  <html lang="en">
+    <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`} 
       >
       <AuthProvider>
-      <BookableProvider>
-        <div className="flex h-dvh w-dvw">
-        <SidebarProvider>
-          <AppSidebar />
-            <main className="flex-1 p-6">
-              <SidebarTrigger />
-              {children}
-            </main>
-          </SidebarProvider>
-        </div>
-      </BookableProvider>
-      </AuthProvider>
+        <SlotProvider>
+          <BookableProvider>
+              <SidebarProvider>
+                <AppSidebar />
+                <main className="flex-1 p-6">
+                  <SidebarTrigger />
+                  {children}
+                </main>
+              </SidebarProvider>
+            </BookableProvider>
+          </SlotProvider>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 interface BookableCardProps extends IBookable {
   onEdit?: () => void;
-  onRemoved?: () => void; // <-- add this prop
+  onRemoved?: () => void; 
 }
 
 const BookableCard = (props: BookableCardProps) => {
@@ -38,36 +38,31 @@ const BookableCard = (props: BookableCardProps) => {
     if (props.onRemoved) props.onRemoved();
   };
 
-  const handleString = (description: string) => {
-    if (description.length > 30) {
-      return description.slice(0, 40) + "...";
-    }
-    return description;
-  };
-
   return (
     <Card
       onClick={() => {
         router.push(`/bookables/${props.uuid}`);
       }}
-  className="m-0 flex cursor-pointer flex-col justify-between h-32 w-full min-w-0 items-center border gap-0 py-0 shadow-sm rounded-xl overflow-hidden bg-white hover:bg-gray-100 transition"
+  className="m-0 flex cursor-pointer flex-col justify-between h-40 w-full min-w-0 items-center border gap-0 py-0 shadow-sm rounded-xl overflow-hidden bg-white hover:bg-gray-100 transition"
     >
+      <div 
+        className="h-full bg-cover bg-gray-100 bg-center w-full" 
+        style={{ backgroundImage: props.image }}>     
+      </div>
       <div
-        className="h-1 m-0  rounded-full w-3/4"
+        className="h-1 m-0 w-full"
         style={{ backgroundColor: props.color }}
       />
-      <CardHeader className="p-3 w-full">
+      <CardHeader className="w-full">
         <CardTitle className="text-md font-semibold text-center">
           - {props.title} -
         </CardTitle>
-        <div className="text-xs w-full text-gray-500 text-left">
-          {handleString(props.desc)}
+        <div className="text-xs w-full text-gray-500 text-left pb-1 truncate">
+          {props.desc}
         </div>
       </CardHeader>
 
-      <CardFooter className="p-2 flex items-center w-full justify-between text-xs">
-        <span className="">{props.price}kr</span>
-        <div>
+      <CardFooter className="flex items-center w-full justify-evenly text-xs">
           <Button
             size="sm"
             variant="ghost"
@@ -84,7 +79,6 @@ const BookableCard = (props: BookableCardProps) => {
           >
             Remove
           </Button>
-        </div>
       </CardFooter>
     </Card>
   );
