@@ -7,13 +7,6 @@ import { IBookable } from "@/models/IBookable";
 import { ISlot } from "@/models/ISlot";
 import { useAuth } from "@/context/AuthContext";
 import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import {
   Table,
   TableHeader,
   TableRow,
@@ -149,23 +142,6 @@ export default function BookableDetailPage() {
 
   return (
     <div>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/panel">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/bookables">Bookables</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href={`/bookables/${bookable.uuid}`}>
-              {bookable.title}
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
       <div
         className="flex flex-col md:flex-row border-l-2 gap-8 mt-8 rounded bg-gray-50 min-h-96"
         style={{ borderColor: bookable.color }}

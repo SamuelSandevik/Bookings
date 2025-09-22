@@ -3,7 +3,6 @@
 import BookableCard from "@/components/bookable-card";
 import CreateBookableForm from "@/components/create-bookable-form";
 import PlaceholderBookableCard from "@/components/placeholder-bookable-card";
-import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -71,17 +70,6 @@ export default function BookablesPage() {
 
   return (
     <>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/panel">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/bookables">Bookables</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
     <div className="">
       <h1 className="text-2xl font-bold my-4">Bookables</h1>
       <div className="bg-gray-100 rounded p-4 flex flex-col sm:flex-row sm:gap-2 gap-4 flex-wrap">

@@ -27,8 +27,8 @@ type WeekDayInfo = {
   date: string;
 };
 
-const BigCalendarWeek = () => {
-  const [currentDay, setCurrentDay] = useState(Date.now());
+const BigCalendarWeek = ({ dateChosen }: { dateChosen: number }) => {
+  const [currentDay, setCurrentDay] = useState<number>(dateChosen);
   const [week, setWeek] = useState<WeekDayInfo[]>([]);
   const todayDate = new Date().toLocaleDateString();
 
@@ -90,7 +90,7 @@ const BigCalendarWeek = () => {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row justify-between gap-1 p-2 w-full">
+      <div className="flex flex-col sm:flex-row justify-between mb-0.5 w-full">
         {/* backward buttons */}
       <div className="flex flex-row sm:justify-start justify-center gap-2">
         <div className="flex">
