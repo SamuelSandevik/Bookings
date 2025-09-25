@@ -75,15 +75,16 @@ pub async fn create_booking(
     }
 }
 
-pub async fn get_bookings(up: &UserProfile) -> Result<Value, ApiError> {
+pub async fn get_bookings(up: &UserProfile, bookable_uuid: &Uuid) -> Result<Value, ApiError> {
     let res = sqlx::query_scalar!(r#"
             SELECT COALESCE(json_agg(row_to_json(s.*)), '[]'::json) 
             FROM bookings s 
             JOIN bookables b ON s.bookable_uuid = b.uuid
             JOIN bookable_slots bs ON s.bookable_slots_uuid = bs.uuid
-            WHERE b.belongs_to_user = $1 
+            WHERE b.belongs_to_user = $1 AND b.uuid = $2
         "#,
-        up.user.uuid
+        up.user.uuid,
+        bookable_uuid
     )
     .fetch_optional(get_db_pool())
     .await;
@@ -133,18 +134,17 @@ pub async fn get_booking(up:  &UserProfile, booking_uuid: &Uuid) -> Result<Value
     }
 }
 
-pub async fn update_status_bookings(up: &UserProfile, status: i16, booking_uuid: &Uuid, profile_uuid: &Uuid) -> Result<Value, ApiError> {
+pub async fn update_status_bookings(up: &UserProfile, status: i16, booking_uuid: &Uuid) -> Result<Value, ApiError> {
     let res = sqlx::query_scalar!(r#"
     UPDATE bookings 
     SET 
     status = $1
     FROM bookings s JOIN bookables b ON b.uuid = s.bookable_uuid
-        WHERE s.uuid = $2 AND s.profile_uuid = $3 AND b.belongs_to_user = $4 RETURNING row_to_json(s.*)
+        WHERE s.uuid = $2 AND b.belongs_to_user = $3 RETURNING row_to_json(s.*)
         "#,
         
         status,
         booking_uuid,
-        profile_uuid,
         up.user.uuid
     )
     .fetch_optional(get_db_pool())
