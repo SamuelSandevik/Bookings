@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION create_booking(
     p_profile_last_name TEXT,
     p_profile_email TEXT,
     p_profile_phone TEXT,
-    p_booking_times_uuid UUID
+    p_booking_slots_uuid UUID
 )
 RETURNS bookings AS $$
 DECLARE
@@ -21,12 +21,12 @@ BEGIN
     SELECT 
         (SELECT count(*) 
          FROM bookings 
-         WHERE bookable_slots_uuid = p_booking_times_uuid
+         WHERE bookable_slots_uuid = p_booking_slots_uuid
         ) < bt.max_capacity,
         bt.bookable_uuid
     INTO v_is_within_capacity, v_bookable_uuid
     FROM bookable_slots bt
-    WHERE bt.uuid = p_booking_times_uuid;
+    WHERE bt.uuid = p_booking_slots_uuid;
 
     IF NOT v_is_within_capacity THEN
         RAISE EXCEPTION 'This bookable is currently full';
@@ -41,7 +41,7 @@ BEGIN
 
     -- Skapa bokning
     INSERT INTO bookings (bookable_uuid, profile_uuid, bookable_slots_uuid)
-    VALUES (v_bookable_uuid, v_profile_uuid, p_booking_times_uuid)
+    VALUES (v_bookable_uuid, v_profile_uuid, p_booking_slots_uuid)
     RETURNING * INTO v_res;
 
     RETURN v_res;

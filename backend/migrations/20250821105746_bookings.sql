@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     uuid UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
     profile_uuid UUID NOT NULL REFERENCES profiles(uuid),
     bookable_slots_uuid UUID NOT NULL REFERENCES bookable_slots(uuid) ON DELETE CASCADE,
-    confirmed BOOLEAN NOT NULL DEFAULT FALSE,
+    status SMALLINT NOT NULL DEFAULT 0,
 
     created_at BIGINT NOT NULL DEFAULT ((extract(epoch FROM NOW()) * 1000)::BIGINT),
     updated_at BIGINT NOT NULL DEFAULT ((extract(epoch FROM NOW()) * 1000)::BIGINT)
